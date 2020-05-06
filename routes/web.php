@@ -13,48 +13,90 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-/*Route::resource('products', 'ProductController');
-*/
-
-/*Route::get('/redir', function () {
-    return redirect()->route('admin.categorias');
-})->middleware('auth');
-*/
-
-Route::group([
-    'middleware' => ['auth'],
-    'prefix' => 'admin'
-], function () {
-    Route::get('/', function () {
-        return 'Dashboard';
-    })->name('admin.dashboard');
-    Route::get('/generos', function () {
-        return 'Generos';
-    })->name('admin.generos');
-    Route::get('/tipo', function () {
-        return 'Tipo (Serie, Filme, Episodio)';
-    })->name('admin.tipo');
-    Route::get('/titulos', function () {
-        return 'Titulos';
-    })->name('admin.titulos');
-    Route::get('/config', function () {
-        return 'Configuracoes';
-    })->name('admin.config');
+/*------------------------
+Painel do Administrador
+--------------------------*/
+Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['auth','role:admin']], function() {
+    Route::get('/', 'AdminController@dashboard')->name('admin.index');
+    Route::get('/users', 'AdminController@users')->name('admin.users');
+    Route::get('/role/{id?}', 'AdminController@changeRole')->name('admin.role');
+    Route::get('/user/delete/{id?}', 'AdminController@deleteUser')->name('admin.user.delete');
+    Route::get('/review', 'AdminController@setting')->name('admin.review');
+    Route::post('/review', 'AdminController@updateReview')->name('admin.review.update');
+    Route::get('/settings', 'SettingsController@setting')->name('admin.settings');
+    Route::post('/settings', 'SettingsController@updateSetting')->name('admin.settings.update');
 });
 
-/*Route::get('/', function () {
+/*--------------------------------------
+Autenticacao com verificacao de E-mail
+---------------------------------------*/
+Auth::routes(['verify' => true]);
+Route::get('/home', 'HomeController@index')->name('register.home');
+
+/*------------------------
+Index e Filmes
+--------------------------*/
+Route::get('/', 'FilmesController@index')->name('filmes.index');
+Route::get('/filmes/{id}', 'FilmesController@show')->name('filmes.show');
+
+/*------------------------
+Atores
+--------------------------*/
+Route::group([
+    'prefix' => 'atores'
+], function () {
+    Route::get('/', 'AtoresController@index')->name('atores.index');
+    Route::get('/pagina/{page?}', 'AtoresController@index')->name('atores.page');
+    Route::get('/{id}', 'AtoresController@show')->name('atores.show');
+});
+
+/*------------------------
+Series de TV
+--------------------------*/
+Route::group([
+    'prefix' => 'tv'
+], function () {
+    Route::get('/', 'TvController@index')->name('tv.index');
+    Route::get('/{id}', 'TvController@show')->name('tv.show');
+});
+
+/*------------------------
+Pagina Estatica Sobre
+--------------------------*/
+Route::get('sobre', 'HomeController@about')->name('about');;
+
+/*------------------------
+Painel do Usuario
+--------------------------*/
+Route::group(['middleware' => 'auth'], function() {
+    Route::get('/assistir', 'ListsController@watchlist')->name('user.watchlist');
+    Route::get('/favoritos', 'ListsController@favourite')->name('user.favourite');
+
+    /* Avaliacoes */
+    Route::post('/review', 'ReviewsController@review')->name('user.review');
+    Route::post('update/review', 'ReviewsController@updateReview')->name('user.update.review');
+    Route::get('delete/review/{id}', 'ReviewsController@deleteReview')->name('user.delete.review');
+
+    /* Configuracoes */
+    Route::get('/user/{username}', 'SettingsController@profile')->name('user.view');
+    Route::get('/settings', 'SettingsController@settings')->name('user.manage');
+    Route::post('/settings', 'SettingsController@updateSettings')->name('user.manage.update');
+    Route::get('/settings/password', 'SettingsController@passwordSettings')->name('user.password');
+    Route::post('/settings/password', 'SettingsController@updatePassword')->name('user.update.password');
+    Route::get('/delete/account', 'SettingsController@deleteAccount')->name('user.delete');
+});
+
+
+
+
+/*
+Route::resource('products', 'ProductController');
+
+Route::get('/redir', function () {
+    return redirect()->route('admin.categorias');
+})->middleware('auth');
+
+Route::get('/', function () {
     return view('welcome');
 })->name('front.home');
-*/
-
-Auth::routes();
-
-Route::get('/', 'HomeController@index')->name('front.home');
-Route::match(['post', 'get'], '/busca/{query?}', 'BuscaController@index')->name('front.busca');
-Route::get('/generos/{id?}', 'GenerosController@index')->name('front.generos');
-Route::get('/filmes/{id?}', 'TitulosController@filmes')->name('front.filmes');
-Route::get('/series/{id?}', 'TitulosController@series')->name('front.series');
-Route::get('/episodios/{id?}/{idSerie}', 'TitulosController@episodios')->name('front.episodios');
-/*Route::get('/atores/{id?}', 'AtoresController@index')->name('front.atores');
-Route::get('/noticias/{id?}', 'NoticiasController@index')->name('front.noticias');
 */
