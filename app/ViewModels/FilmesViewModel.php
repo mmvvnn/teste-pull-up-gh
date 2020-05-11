@@ -4,18 +4,23 @@ namespace App\ViewModels;
 
 use Carbon\Carbon;
 use Spatie\ViewModels\ViewModel;
+use Illuminate\Support\Facades\Http;
 
 class FilmesViewModel extends ViewModel
 {
     public $popularMovies;
     public $nowPlayingMovies;
     public $genres;
+    public $topRatedMovies;
+    public $movieTrailers;
 
-    public function __construct($popularMovies, $nowPlayingMovies, $genres)
+    public function __construct($popularMovies, $nowPlayingMovies, $genres, $topRatedMovies)
     {
         $this->popularMovies = $popularMovies;
         $this->nowPlayingMovies = $nowPlayingMovies;
         $this->genres = $genres;
+        $this->topRatedMovies = $topRatedMovies;
+        $this->movieTrailers = $this->getTrailerMovies();
     }
 
     public function popularMovies()
@@ -35,6 +40,28 @@ class FilmesViewModel extends ViewModel
         });
     }
 
+    public function topRatedMovies()
+    {
+        return $this->formatMovies($this->topRatedMovies);
+    }
+
+    private function getTrailerMovies()
+    {
+         // Get Trailers
+         $i=0; // Count
+         $lim = 8; // Limit Number of Trailers
+         $movieTrailers = array();
+         foreach ($this->popularMovies as $movie) {
+             $movie = Http::withToken(config('services.tmdb.token'))
+                     ->get('https://api.themoviedb.org/3/movie/'.$movie['id'].'?append_to_response=videos,images')
+                     ->json();
+             $movieTrailers[] = $this->formatTrailer($movie);
+             if (++$i === $lim) break; // Limit
+         }
+         // End Get Trailers
+         return $movieTrailers;
+    }
+
     private function formatMovies($movies)
     {
         return collect($movies)->map(function($movie) {
@@ -45,11 +72,25 @@ class FilmesViewModel extends ViewModel
             return collect($movie)->merge([
                 'poster_path' => 'https://image.tmdb.org/t/p/w500/'.$movie['poster_path'],
                 'vote_average' => $movie['vote_average'] * 10 .'%',
-                'release_date' => Carbon::parse($movie['release_date'])->format('M d, Y'),
+                'release_date' => Carbon::parse($movie['release_date'])->format('d F Y'),
                 'genres' => $genresFormatted,
             ])->only([
-                'poster_path', 'id', 'genre_ids', 'title', 'vote_average', 'overview', 'release_date', 'genres',
+                'poster_path', 'id', 'genre_ids', 'title', 'vote_average', 'overview', 'release_date', 'genres', 'original_language', 
             ]);
         });
+    }
+
+    private function formatTrailer($movie)
+    {
+        return collect($movie)->merge([
+            'poster_path' => $movie['poster_path']
+                ? 'https://image.tmdb.org/t/p/w500/'.$movie['poster_path']
+                : 'https://via.placeholder.com/500x750',
+            'image' => $movie['images']['backdrops'][0]['file_path'],
+            'video' => $movie['videos']['results'][0]['key'],
+            'genres' => collect($movie['genres'])->pluck('name')->flatten()->implode(', '),
+        ])->only([
+            'poster_path', 'id', 'title', 'video', 'image', 'genres', 
+        ]);
     }
 }

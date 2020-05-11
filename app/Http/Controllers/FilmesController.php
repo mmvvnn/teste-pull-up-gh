@@ -1,10 +1,12 @@
-<?php
+<?php 
 
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\ViewModels\FilmeViewModel;
 use App\ViewModels\FilmesViewModel;
+use App\ViewModels\AtoresViewModel;
+use App\ViewModels\NewsViewModel;
 use Illuminate\Support\Facades\Http;
 
 class FilmesController extends Controller
@@ -28,11 +30,32 @@ class FilmesController extends Controller
             ->get('https://api.themoviedb.org/3/genre/movie/list?language=pt-BR')
             ->json()['genres'];
 
-        $viewModel = new FilmesViewModel(
+        $topRatedMovies = Http::withToken(config('services.tmdb.token'))
+            ->get('https://api.themoviedb.org/3/movie/top_rated?language=pt-BR')
+            ->json()['results'];
+
+        $popularActors = Http::withToken(config('services.tmdb.token'))
+            ->get('https://api.themoviedb.org/3/person/popular?language=pt-BR')
+            ->json()['results'];
+
+        // Get Popular, Now Playing, Genres and Trailers
+        $getMovies = new FilmesViewModel(
             $popularMovies,
             $nowPlayingMovies,
             $genres,
+            $topRatedMovies
         );
+
+        // Get popular Actors
+        $getActors = new AtoresViewModel($popularActors,1);
+
+        // Get News by IMDB
+        $getNews = new NewsViewModel(5);
+
+        // Merge
+        $viewModel=collect($getMovies)->merge($getActors)->merge($getNews)->toArray(); //-toJson();
+        //$viewModel = (object)$viewModel;
+        //dd($viewModel);
 
         return view('filmes.index', $viewModel);
     }

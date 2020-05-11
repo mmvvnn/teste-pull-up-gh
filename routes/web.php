@@ -36,8 +36,10 @@ Route::get('/home', 'HomeController@index')->name('register.home');
 /*------------------------
 Index e Filmes
 --------------------------*/
+Route::get('/filmes', 'FilmesController@index')->name('filmes.all.index');
 Route::get('/', 'FilmesController@index')->name('filmes.index');
 Route::get('/filmes/{id}', 'FilmesController@show')->name('filmes.show');
+Route::get('/novidades', 'NewsController@index')->name('news.index');;
 
 /*------------------------
 Atores

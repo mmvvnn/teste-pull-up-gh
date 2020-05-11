@@ -9,13 +9,10 @@ class FilmeViewModel extends ViewModel
 {
     public $movie;
 
-    public function __construct($movie)
+    public function movie($movie)
     {
         $this->movie = $movie;
-    }
 
-    public function movie()
-    {
         return collect($this->movie)->merge([
             'poster_path' => $this->movie['poster_path']
                 ? 'https://image.tmdb.org/t/p/w500/'.$this->movie['poster_path']
@@ -34,7 +31,23 @@ class FilmeViewModel extends ViewModel
             'images' => collect($this->movie['images']['backdrops'])->take(9),
         ])->only([
             'poster_path', 'id', 'genres', 'title', 'vote_average', 'overview', 'release_date', 'credits' ,
-            'videos', 'images', 'crew', 'cast', 'images'
+            'videos', 'images', 'crew', 'cast', 
+        ]);
+    }
+
+    public function trailer($movie)
+    {
+        $this->movie = $movie;
+
+        return collect($this->movie)->merge([
+            'poster_path' => $this->movie['poster_path']
+                ? 'https://image.tmdb.org/t/p/w500/'.$this->movie['poster_path']
+                : 'https://via.placeholder.com/500x750',
+            'image' => $this->movie['images']['backdrops'][0]['file_path'],
+            'video' => $this->movie['videos']['results'][0]['key'],
+            'genres' => collect($this->movie['genres'])->pluck('name')->flatten()->implode(', '),
+        ])->only([
+            'poster_path', 'id', 'title', 'video', 'image', 'genres', 
         ]);
     }
 }
