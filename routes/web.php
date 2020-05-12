@@ -36,19 +36,18 @@ Route::get('/home', 'HomeController@index')->name('register.home');
 /*------------------------
 Index e Filmes
 --------------------------*/
-Route::get('/filmes', 'FilmesController@index')->name('filmes.all.index');
-Route::get('/', 'FilmesController@index')->name('filmes.index');
+Route::get('/filmes/todos/{page?}', 'FilmesController@index')->name('filmes.filmes');
+Route::get('/', 'IndexController@index')->name('filmes.index');
 Route::get('/filmes/{id}', 'FilmesController@show')->name('filmes.show');
-Route::get('/novidades', 'NewsController@index')->name('news.index');;
 
 /*------------------------
 Atores
 --------------------------*/
 Route::group([
-    'prefix' => 'atores'
+    'prefix' => 'celebridades'
 ], function () {
     Route::get('/', 'AtoresController@index')->name('atores.index');
-    Route::get('/pagina/{page?}', 'AtoresController@index')->name('atores.page');
+    Route::get('/todas/{page?}', 'AtoresController@index')->name('atores.page');
     Route::get('/{id}', 'AtoresController@show')->name('atores.show');
 });
 
@@ -58,7 +57,7 @@ Series de TV
 Route::group([
     'prefix' => 'tv'
 ], function () {
-    Route::get('/', 'TvController@index')->name('tv.index');
+    Route::get('/todas/{page?}', 'TvController@index')->name('tv.index');
     Route::get('/{id}', 'TvController@show')->name('tv.show');
 });
 
@@ -70,7 +69,7 @@ Route::get('sobre', 'HomeController@about')->name('about');;
 /*------------------------
 Painel do Usuario
 --------------------------*/
-Route::group(['middleware' => 'auth'], function() {
+Route::group(['prefix' => 'usuario', 'middleware' => 'auth'], function() {
     Route::get('/assistir', 'ListsController@watchlist')->name('user.watchlist');
     Route::get('/favoritos', 'ListsController@favourite')->name('user.favourite');
 

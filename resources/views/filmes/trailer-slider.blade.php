@@ -3,7 +3,7 @@
 		<div class="col-md-9 col-sm-12 col-xs-12">
 			<div class="title-hd">
 				<h2>TRAILERS POPULARES</h2>
-				<a href="{{ route('filmes.index') }}" class="viewall">VER TODOS <i class="ion-ios-arrow-right"></i></a>
+				<a href="{{ route('filmes.filmes') }}" class="viewall">VER TODOS <i class="ion-ios-arrow-right"></i></a>
 			</div>
 			<div class="videos">
 				 <div class="slider-for-2 video-ft">

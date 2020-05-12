@@ -1,41 +1,62 @@
-<?php
+<?php 
 
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\ViewModels\TvViewModel;
-use App\ViewModels\TvShowViewModel;
+use App\ViewModels\IndexViewModel;
+use App\ViewModels\AtoresViewModel;
+use App\ViewModels\NewsViewModel;
 use Illuminate\Support\Facades\Http;
 
-class TvController extends Controller
+class IndexController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($page = 1)
+    public function index()
     {
-        $discover = Http::withToken(config('services.tmdb.token'))
-            ->get('https://api.themoviedb.org/3/discover/tv?language=pt-BR&sort_by=popularity.desc&page='.$page)
-            ->json();
+        $popularMovies = Http::withToken(config('services.tmdb.token'))
+            ->get('https://api.themoviedb.org/3/movie/popular?language=pt-BR')
+            ->json()['results'];
+
+        $nowPlayingMovies = Http::withToken(config('services.tmdb.token'))
+            ->get('https://api.themoviedb.org/3/movie/now_playing?language=pt-BR')
+            ->json()['results'];
 
         $genres = Http::withToken(config('services.tmdb.token'))
-            ->get('https://api.themoviedb.org/3/genre/tv/list?language=pt-BR')
+            ->get('https://api.themoviedb.org/3/genre/movie/list?language=pt-BR')
             ->json()['genres'];
 
+        $topRatedMovies = Http::withToken(config('services.tmdb.token'))
+            ->get('https://api.themoviedb.org/3/movie/top_rated?language=pt-BR')
+            ->json()['results'];
+
+        $popularActors = Http::withToken(config('services.tmdb.token'))
+            ->get('https://api.themoviedb.org/3/person/popular?language=pt-BR')
+            ->json()['results'];
+
         // Get Popular, Now Playing, Genres and Trailers
-        $getTv = new TvViewModel(
-            $discover,
-            $genres
+        $getMovies = new IndexViewModel(
+            $popularMovies,
+            $nowPlayingMovies,
+            $genres,
+            $topRatedMovies
         );
 
+        // Get popular Actors
+        $getActors = new AtoresViewModel($popularActors,1);
+
+        // Get News by IMDB
+        $getNews = new NewsViewModel(5);
+
         // Merge
-        $viewModel=$getTv; //-toJson();
+        $viewModel=collect($getMovies)->merge($getActors)->merge($getNews)->toArray(); //-toJson();
         //$viewModel = (object)$viewModel;
         //dd($viewModel);
 
-        return view('tv.index', $viewModel);
+        return view('filmes.index', $viewModel);
     }
 
     /**
@@ -67,13 +88,7 @@ class TvController extends Controller
      */
     public function show($id)
     {
-        $tvshow = Http::withToken(config('services.tmdb.token'))
-            ->get('https://api.themoviedb.org/3/tv/'.$id.'?append_to_response=credits,videos,images')
-            ->json();
-
-        $viewModel = new TvShowViewModel($tvshow);
-
-        return view('tv.show', $viewModel);
+        //
     }
 
     /**

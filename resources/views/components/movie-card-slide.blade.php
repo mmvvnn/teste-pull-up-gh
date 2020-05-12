@@ -8,7 +8,7 @@
         </div>
         <div class="title-in">
             <h6><a href="{{ route('filmes.show', $movie['id']) }}">{{ $movie['title'] }}</a></h6>
-            <p><i class="ion-android-star"></i><span>{{ $movie['vote_average'] }}</span> /100%</p>
+            <p><i class="ion-android-star"></i><span>{{ $movie['vote_average'] }}</span> / 10</p>
         </div>
     </div>
 </div>

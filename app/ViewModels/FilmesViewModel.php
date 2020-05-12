@@ -8,29 +8,19 @@ use Illuminate\Support\Facades\Http;
 
 class FilmesViewModel extends ViewModel
 {
-    public $popularMovies;
-    public $nowPlayingMovies;
-    public $genres;
-    public $topRatedMovies;
-    public $movieTrailers;
+    public $discover, $genres;
 
-    public function __construct($popularMovies, $nowPlayingMovies, $genres, $topRatedMovies)
+    public function __construct($discover, $genres)
     {
-        $this->popularMovies = $popularMovies;
-        $this->nowPlayingMovies = $nowPlayingMovies;
+        $this->discover = $discover;
         $this->genres = $genres;
-        $this->topRatedMovies = $topRatedMovies;
-        $this->movieTrailers = $this->getTrailerMovies();
     }
 
-    public function popularMovies()
+    public function discover()
     {
-        return $this->formatMovies($this->popularMovies);
-    }
-
-    public function nowPlayingMovies()
-    {
-        return $this->formatMovies($this->nowPlayingMovies);
+        $lim = 20; // Limit per page
+        $offset = 4;
+        return $this->formatMovies($this->discover, $lim, $offset);
     }
 
     public function genres()
@@ -40,57 +30,36 @@ class FilmesViewModel extends ViewModel
         });
     }
 
-    public function topRatedMovies()
+    private function formatMovies($movies, $lim, $offset)
     {
-        return $this->formatMovies($this->topRatedMovies);
-    }
-
-    private function getTrailerMovies()
-    {
-         // Get Trailers
-         $i=0; // Count
-         $lim = 8; // Limit Number of Trailers
-         $movieTrailers = array();
-         foreach ($this->popularMovies as $movie) {
-             $movie = Http::withToken(config('services.tmdb.token'))
-                     ->get('https://api.themoviedb.org/3/movie/'.$movie['id'].'?append_to_response=videos,images')
-                     ->json();
-             $movieTrailers[] = $this->formatTrailer($movie);
-             if (++$i === $lim) break; // Limit
-         }
-         // End Get Trailers
-         return $movieTrailers;
-    }
-
-    private function formatMovies($movies)
-    {
-        return collect($movies)->map(function($movie) {
+        // Change only in key 'results'
+        $moviesResults = collect($movies['results'])->map(function($movie) {
             $genresFormatted = collect($movie['genre_ids'])->mapWithKeys(function($value) {
                 return [$value => $this->genres()->get($value)];
             })->implode(', ');
 
             return collect($movie)->merge([
                 'poster_path' => 'https://image.tmdb.org/t/p/w500/'.$movie['poster_path'],
-                'vote_average' => $movie['vote_average'] * 10 .'%',
+                /*'vote_average' => $movie['vote_average'] * 10 .'%',*/
                 'release_date' => Carbon::parse($movie['release_date'])->format('d F Y'),
                 'genres' => $genresFormatted,
             ])->only([
-                'poster_path', 'id', 'genre_ids', 'title', 'vote_average', 'overview', 'release_date', 'genres', 'original_language', 
+                'poster_path', 'id', 'title', 'vote_average', 'overview', 'release_date', 'genres', 'original_language', 
             ]);
-        });
+        })->take($lim);
+        // Join with another keys from movies
+        $movieAll = collect($movies)->merge([
+            'page' => $movies['page'],
+            'total_results' => $movies['total_results'],
+            'total_pages' => $movies['total_pages'],
+            'per_page' => $lim,
+            'offset' => $offset,
+            'results' => $moviesResults
+        ])->only([
+            'page', 'total_results', 'total_pages', 'per_page', 'offset', 'results'
+        ]);
+
+        return $movieAll;
     }
 
-    private function formatTrailer($movie)
-    {
-        return collect($movie)->merge([
-            'poster_path' => $movie['poster_path']
-                ? 'https://image.tmdb.org/t/p/w500/'.$movie['poster_path']
-                : 'https://via.placeholder.com/500x750',
-            'image' => $movie['images']['backdrops'][0]['file_path'],
-            'video' => $movie['videos']['results'][0]['key'],
-            'genres' => collect($movie['genres'])->pluck('name')->flatten()->implode(', '),
-        ])->only([
-            'poster_path', 'id', 'title', 'video', 'image', 'genres', 
-        ]);
-    }
 }

@@ -27,7 +27,7 @@
 <body>
     <!--preloading-->
     <div id="preloader">
-        <img class="logo" src="./img/front/logo1.png" alt="" width="119" height="58">
+        <img class="logo" src="{{ asset('img/front') }}/logo1.png" alt="" width="119" height="58">
         <div id="status">
             <span></span>
             <span></span>
@@ -57,17 +57,17 @@
                         <span></span>
                     </div>
                 </div>
-                <a href="{{ route('filmes.index') }}"><img class="logo" src="./img/front/logo1.png" alt="" width="119" height="58"></a>
+                <a href="{{ route('filmes.index') }}"><img class="logo" src="{{ asset('img/front') }}/logo1.png" alt="Logo" width="119" height="58"></a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse flex-parent" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav flex-child-menu menu-left">
                     <li class="hidden"><a href="#page-top"></a></li>
                     <li><a href="{{ route('filmes.index') }}">Inicio</a></li>
-                    <li><a href="{{ route('filmes.all.index') }}">Filmes</a></li>
+                    <li><a href="{{ route('filmes.filmes') }}">Filmes</a></li>
                     <li><a href="{{ route('tv.index') }}">Séries de TV</a></li>
-                    <li><a href="{{ route('atores.index') }}">Atores</a></li>
-                    <li><a href="#latest-news">Notícias</a></li>
+                    <li><a href="{{ route('atores.index') }}">Celebridades</a></li>
+                    <li><a href="{{ route('filmes.index') }}#latest-news">Notícias</a></li>
                 </ul>
                 <ul class="nav navbar-nav flex-child-menu menu-right">
                     <li><a href="{{ route('about') }}">Sobre o Sistema</a></li>
@@ -95,27 +95,27 @@
 	<div class="row">
 		<div class="flex-parent-ft">
 			<div class="flex-child-ft item1">
-				 <a href="{{ route('filmes.index') }}"><img class="logo" src="./img/front/logo1.png" alt=""></a>
+				 <a href="{{ route('filmes.index') }}"><img class="logo" src="{{ asset('img/front') }}/logo1.png" alt="Logo"></a>
 				 <p>Projeto desenvolvido em Laravel 7<br>
 				utilizando a API TMDB - Para </p>
 				<p><a href="https://www.pullup.tech/" target="_blank">Pull Up (By Marcelo)</a></p>
 			</div>
 			<div class="flex-child-ft item2 generes">
 				<h4>Gêneros</h4>
-				<ul>
+				{{-- <ul>
                     @foreach (collect($genres)->take(18) as $gen_id => $gen_name)
                         <li><a href="#{{ $gen_id }}">{{ $gen_name }}</a></li>
                     @endforeach
-				</ul>
+				</ul> --}}
 			</div>
 			<div class="flex-child-ft item3">
 				<h4>Páginas</h4>
 				<ul>
                     <li><a href="{{ route('filmes.index') }}">Início</a></li>
-					<li><a href="{{ route('filmes.all.index') }}">Filmes</a></li>
+					<li><a href="{{ route('filmes.filmes') }}">Filmes</a></li>
                     <li><a href="{{ route('tv.index') }}">Séries de TV</a></li>
-                    <li><a href="{{ route('atores.index') }}">Atores</a></li>
-                    <li><a href="#latest-news">Notícias</a></li>
+                    <li><a href="{{ route('atores.index') }}">Celebridades</a></li>
+                    <li><a href="{{ route('filmes.index') }}#latest-news">Notícias</a></li>
 				</ul>
 			</div>
 			<div class="flex-child-ft item4">
@@ -153,5 +153,6 @@
     <script src="{{ asset('js/front/plugins2.js') }}" defer></script>
     <script src="{{ asset('js/front/custom.js') }}" defer></script>
     <livewire:scripts>
+    @yield('scripts')
 </body>
 </html>

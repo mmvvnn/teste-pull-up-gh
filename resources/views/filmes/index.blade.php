@@ -26,7 +26,7 @@
                 <!-- Em Cartaz -->
                 <div class="title-hd">
 				    <h2>EM CARTAZ</h2>
-				    <a href="{{ route('filmes.index') }}" class="viewall">VER TODOS <i class="ion-ios-arrow-right"></i></a>
+				    <a href="{{ route('filmes.filmes') }}" class="viewall">VER TODOS <i class="ion-ios-arrow-right"></i></a>
 			    </div>
                 
 			    <div class="row">
@@ -41,7 +41,7 @@
                 <!-- Populares -->
 			    <div class="title-hd">
 				    <h2>FILMES POPULARES</h2>
-				    <a href="{{ route('filmes.index') }}" class="viewall">VER TODOS <i class="ion-ios-arrow-right"></i></a>
+				    <a href="{{ route('filmes.filmes') }}" class="viewall">VER TODOS <i class="ion-ios-arrow-right"></i></a>
 			    </div>
                 
 			    <div class="row">

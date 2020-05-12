@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\ViewModels\FilmeViewModel;
 use App\ViewModels\FilmesViewModel;
-use App\ViewModels\AtoresViewModel;
-use App\ViewModels\NewsViewModel;
 use Illuminate\Support\Facades\Http;
+	
+
 
 class FilmesController extends Controller
 {
@@ -16,48 +16,28 @@ class FilmesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($page = 1)
     {
-        $popularMovies = Http::withToken(config('services.tmdb.token'))
-            ->get('https://api.themoviedb.org/3/movie/popular?language=pt-BR')
-            ->json()['results'];
-
-        $nowPlayingMovies = Http::withToken(config('services.tmdb.token'))
-            ->get('https://api.themoviedb.org/3/movie/now_playing?language=pt-BR')
-            ->json()['results'];
+        $discover = Http::withToken(config('services.tmdb.token'))
+            ->get('https://api.themoviedb.org/3/discover/movie?language=pt-BR&sort_by=popularity.desc&page='.$page)
+            ->json();
 
         $genres = Http::withToken(config('services.tmdb.token'))
             ->get('https://api.themoviedb.org/3/genre/movie/list?language=pt-BR')
             ->json()['genres'];
 
-        $topRatedMovies = Http::withToken(config('services.tmdb.token'))
-            ->get('https://api.themoviedb.org/3/movie/top_rated?language=pt-BR')
-            ->json()['results'];
-
-        $popularActors = Http::withToken(config('services.tmdb.token'))
-            ->get('https://api.themoviedb.org/3/person/popular?language=pt-BR')
-            ->json()['results'];
-
         // Get Popular, Now Playing, Genres and Trailers
         $getMovies = new FilmesViewModel(
-            $popularMovies,
-            $nowPlayingMovies,
-            $genres,
-            $topRatedMovies
+            $discover,
+            $genres
         );
-
-        // Get popular Actors
-        $getActors = new AtoresViewModel($popularActors,1);
-
-        // Get News by IMDB
-        $getNews = new NewsViewModel(5);
-
+        
         // Merge
-        $viewModel=collect($getMovies)->merge($getActors)->merge($getNews)->toArray(); //-toJson();
+        $viewModel=$getMovies; //-toJson();
         //$viewModel = (object)$viewModel;
         //dd($viewModel);
 
-        return view('filmes.index', $viewModel);
+        return view('filmes.filmes', $viewModel);
     }
 
     /**

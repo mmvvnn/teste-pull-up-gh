@@ -22,7 +22,7 @@ class SearchDropdown extends Component
         // dump($searchResults);
 
         return view('livewire.search-dropdown', [
-            'searchResults' => collect($searchResults)->take(7),
+            'searchResults' => collect($searchResults)->take(12),
         ]);
     }
 }

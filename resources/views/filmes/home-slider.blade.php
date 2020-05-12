@@ -23,7 +23,7 @@
 				    </div>		
 			    </div>
 			    <div class="mv-details">
-				    <p><i class="ion-android-star"></i><span>{{ $movie['vote_average'] }}</span> / 100%</p>
+				    <p><i class="ion-android-star"></i><span>{{ $movie['vote_average'] }}</span> / 10</p>
 				    <ul class="mv-infor">
 					    <li>  Idioma Original: {{ $movie['original_language'] }}  </li>
 					    <li>  Estreia: {{ $movie['release_date'] }}</li>
