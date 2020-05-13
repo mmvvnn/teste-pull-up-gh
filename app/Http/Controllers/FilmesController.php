@@ -74,7 +74,7 @@ class FilmesController extends Controller
             ->json();
 
         $viewModel = new FilmeViewModel($movie);
-
+        
         return view('filmes.show', $viewModel);
     }
 
