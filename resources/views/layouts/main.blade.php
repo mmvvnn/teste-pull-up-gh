@@ -36,11 +36,11 @@
     <!--end of preloading-->
 
     <!--login form popup-->
-    @yield('login-form')
+    @include('components.login-card')
     <!--end of login form popup-->
 
     <!--signup form popup-->
-    @yield('signup-form')
+    @include('components.signup-card')
     <!--end of signup form popup-->
 
     <!-- BEGIN | Header -->
@@ -99,15 +99,17 @@
 				 <p>Projeto desenvolvido em Laravel 7<br>
 				utilizando a API TMDB - Para </p>
 				<p><a href="https://www.pullup.tech/" target="_blank">Pull Up (By Marcelo)</a></p>
-			</div>
+            </div>
+            @if (isset($genres))
 			<div class="flex-child-ft item2 generes">
 				<h4>Gêneros</h4>
-				{{-- <ul>
+				<ul>
                     @foreach (collect($genres)->take(18) as $gen_id => $gen_name)
                         <li><a href="#{{ $gen_id }}">{{ $gen_name }}</a></li>
                     @endforeach
-				</ul> --}}
-			</div>
+				</ul>
+            </div>
+            @endif
 			<div class="flex-child-ft item3">
 				<h4>Páginas</h4>
 				<ul>

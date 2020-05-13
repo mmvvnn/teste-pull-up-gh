@@ -7,11 +7,12 @@ use Spatie\ViewModels\ViewModel;
 
 class FilmeViewModel extends ViewModel
 {
-    public $movie;
+    public $movie, $similars;
 
-    public function __construct($movie)
+    public function __construct($movie, $similars)
     {
         $this->movie = $movie;
+        $this->similars = $similars;
     }
 
     public function movie()
@@ -24,7 +25,7 @@ class FilmeViewModel extends ViewModel
                 ? 'https://image.tmdb.org/t/p/w500/'.$this->movie['poster_path']
                 : 'https://via.placeholder.com/500x750',
             /*'vote_average' => $this->movie['vote_average'] * 10 .'%',*/
-            'release_date' => Carbon::parse($this->movie['release_date'])->format('d M Y'),
+            'release_date' => Carbon::parse($this->movie['release_date'])->format('d/m/Y'),
             'genres' => collect($this->movie['genres'])->pluck('name')->flatten()->implode(', '),
             'crew' => collect($this->movie['credits']['crew'])->take(5),
             'cast' => collect($this->movie['credits']['cast'])->take(10)->map(function($cast) {
@@ -74,5 +75,21 @@ class FilmeViewModel extends ViewModel
         ]);
 
         return $trailer;
+    }
+
+    public function similars()
+    {
+        $similars = collect($this->similars)->map(function($similar) {
+            return collect($similar)->merge([
+                'poster_path' => collect($similar['poster_path'])
+                    ? 'https://image.tmdb.org/t/p/w500/'.$similar['poster_path']
+                    : 'https://via.placeholder.com/500x750',
+                'release_date' => Carbon::parse($similar['release_date'])->format('Y'),
+            ])->only([
+                'poster_path', 'id', 'title', 'overview', 'release_date', 'vote_average'
+            ]);
+        })->take(4);
+
+        return $similars;
     }
 }

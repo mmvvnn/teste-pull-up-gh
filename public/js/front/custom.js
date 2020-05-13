@@ -57,6 +57,7 @@ $(function(){
 		// Show/Hide Tabs
 		tabsCurrent.show().siblings().hide();
 		// Change/remove current tab to active
+		$('.tabs-mv').find('li a[href="'+currentAttrValue+'"]').parent().addClass('active').siblings().removeClass('active');
 		$(this).parent('li').addClass('active').siblings().removeClass('active');
 		e.preventDefault();
 		//reset position for tabs
