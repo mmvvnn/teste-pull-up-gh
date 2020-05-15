@@ -76,8 +76,12 @@ class FilmesController extends Controller
         $similars = Http::withToken(config('services.tmdb.token'))
             ->get('https://api.themoviedb.org/3/movie/'.$id.'/similar?language=pt-BR')
             ->json()['results'];
-
-        $viewModel = new FilmeViewModel($movie, $similars);
+        
+        $keywords = Http::withToken(config('services.tmdb.token'))
+            ->get('https://api.themoviedb.org/3/movie/'.$id.'/keywords?language=pt-BR')
+            ->json()['keywords'];
+        
+        $viewModel = new FilmeViewModel($movie, $similars, $keywords);
         
         return view('filmes.show', $viewModel);
     }

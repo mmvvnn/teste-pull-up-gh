@@ -17,7 +17,7 @@
 					@foreach ($movieTrailers as $movie)
 						<div class="item">
 							<div class="trailer-img">
-								<img src="https://image.tmdb.org/t/p/w500{{ $movie['image'] }}"  alt="{{ $movie['title'] }}" width="4096" height="2737">
+								<img src="https://image.tmdb.org/t/p/w154{{ $movie['image'] }}"  alt="{{ $movie['title'] }}" width="4096" height="2737">
 							</div>
 							<div class="trailer-infor">
 								<h4 class="desc">{{ $movie['title'] }}</h4>

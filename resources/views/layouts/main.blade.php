@@ -9,18 +9,20 @@
     <html lang="pt-br" class="no-js">
     <head>
     <meta charset="UTF-8">
-    @yield('meta-description')
-    @yield('meta-keywords')
+    <meta name="description" content="@yield('meta-description')">
+    <meta name="keywords" content="@yield('meta-keywords')">
+    <meta name="author" content="Marcelo Vinicius - maarvvini@gmail.com">
     <!--Google Font-->
     <link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Dosis:400,700,500|Nunito:300,400,600' />
 	<!-- Mobile specific meta -->
 	<meta name=viewport content="width=device-width, initial-scale=1">
 	<meta name="format-detection" content="telephone-no">
-    <title>Pull Up - Movie Review - By Marcelo</title>
+    <title>@yield('title') - Pull Up - Movie Review - By Marcelo</title>
 
     <!-- CSS files -->
     <link href="{{ asset('css/front/plugins.css') }}" rel="stylesheet">
     <link href="{{ asset('css/front/style.css') }}" rel="stylesheet">
+    @yield('404-style')
     
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
 </head>

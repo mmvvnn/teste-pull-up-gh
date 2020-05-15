@@ -1,5 +1,9 @@
 @extends('layouts.main')
 
+@section('meta-description', 'Atores e atrizes de filmes e séries')
+@section('meta-keywords', 'atores, atrizes, hollywood, nome do ator, serie, ator da serie, ator do filme, atriz, ator, celebridades')
+@section('title', 'Celebridades')
+
 @section('content')
 
     <div class="hero common-hero">

@@ -1,5 +1,9 @@
 @extends('layouts.main')
 
+@section('meta-description', 'Séries dos mais diversos gêneros')
+@section('meta-keywords', 'serie, series, hollywood, imdb, nome da serie, sinopse, ver serie, online, genero, series online, baixar serie, ep, epsodio, todos os epsodios, temporada, todas as temporadas, download')
+@section('title', 'Séries')
+
 @section('content')
 
     <div class="hero common-hero">

@@ -12,15 +12,7 @@
                 </h1>
 			    <div class="social-btn">
 				    <a href="{{ route('filmes.show', $movie['id']) }}" class="parent-btn"><i class="ion-play"></i> Assistir Trailer</a>
-				    <a href="{{ route('user.favourite') }}" class="parent-btn"><i class="ion-heart"></i> Adicionar Favorito</a>
-				    <div class="hover-bnt">
-					    <a href="#" class="parent-btn"><i class="ion-android-share-alt"></i>Compartilhe</a>
-					    <div class="hvr-item">
-						    <a href="#" class="hvr-grow"><i class="ion-social-facebook"></i></a>
-						    <a href="#" class="hvr-grow"><i class="ion-social-twitter"></i></a>
-						    <a href="#" class="hvr-grow"><i class="ion-social-whatsapp"></i></a>
-					    </div>
-				    </div>		
+				    <a href="{{ route('user.favourite') }}" class="parent-btn"><i class="ion-heart"></i> Adicionar Favorito</a>	
 			    </div>
 			    <div class="mv-details">
 				    <p><i class="ion-android-star"></i><span>{{ $movie['vote_average'] }}</span> / 10</p>
@@ -37,7 +29,7 @@
 	    </div>
 	    <div class="col-md-4 col-sm-12 col-xs-12">
 		    <div class="mv-img-2">
-			    <a href="{{ route('filmes.show', $movie['id']) }}"><img src="{{ $movie['poster_path'] }}" alt="" width="270" height="414"></a>
+			    <a href="{{ route('filmes.show', $movie['id']) }}"><img src="{{ $movie['poster_path_slider'] }}" alt="" width="270" height="414"></a>
 		    </div>
 	    </div>
     </div>	

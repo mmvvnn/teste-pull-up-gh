@@ -71,7 +71,15 @@ class TvController extends Controller
             ->get('https://api.themoviedb.org/3/tv/'.$id.'?append_to_response=credits,videos,images')
             ->json();
 
-        $viewModel = new TvShowViewModel($tvshow);
+        $similars = Http::withToken(config('services.tmdb.token'))
+            ->get('https://api.themoviedb.org/3/tv/'.$id.'/similar?language=pt-BR')
+            ->json()['results'];
+
+        $keywords = Http::withToken(config('services.tmdb.token'))
+            ->get('https://api.themoviedb.org/3/tv/'.$id.'/keywords?language=pt-BR')
+            ->json()['results'];
+
+        $viewModel = new TvShowViewModel($tvshow, $similars, $keywords);
 
         return view('tv.show', $viewModel);
     }

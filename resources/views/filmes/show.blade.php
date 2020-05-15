@@ -1,5 +1,9 @@
 @extends('layouts.main')
 
+@section('meta-description', substr($movie['overview'], 0, 320))
+@section('meta-keywords', collect($keywords)->pluck('name')->flatten()->implode(', '))
+@section('title', $movie['title'])
+
 @section('content')
 
 <div class="hero mv-single-hero" style="background: url({{ $movie['backdrop_path'] }}) no-repeat center">
@@ -179,13 +183,11 @@
 						            			<p>{{ $movie['status'] }}</p>
 						            		</div>
 						            		<div class="sb-it">
-						            			<h6>Plot Keywords:</h6>
+						            			<h6>Palavras Chave:</h6>
 						            			<p class="tags">
-						            				<span class="time"><a href="#">superhero</a></span>
-													<span class="time"><a href="#">marvel universe</a></span>
-													<span class="time"><a href="#">comic</a></span>
-													<span class="time"><a href="#">blockbuster</a></span>
-													<span class="time"><a href="#">final battle</a></span>
+                                                    @foreach ($keywords as $keyword)
+                                                        <span class="time"><a href="#">{{ $keyword['name'] }}</a></span>
+													@endforeach
 						            			</p>
 						            		</div>
 						            		<div class="ads">

@@ -1,142 +1,413 @@
 @extends('layouts.main')
 
+@section('meta-description', substr($tvshow['overview'], 0, 320))
+@section('meta-keywords', collect($keywords)->pluck('name')->flatten()->implode(', '))
+@section('title', $tvshow['name'])
+
 @section('content')
-    <div class="tv-info border-b border-gray-800">
-        <div class="container mx-auto px-4 py-16 flex flex-col md:flex-row">
-            <div class="flex-none">
-                <img src="{{ $tvshow['poster_path'] }}" alt="parasite" class="w-64 lg:w-96">
-            </div>
-            <div class="md:ml-24">
-                <h2 class="text-4xl mt-4 md:mt-0 font-semibold">{{ $tvshow['name'] }}</h2>
-                <div class="flex flex-wrap items-center text-gray-400 text-sm">
-                    <svg class="fill-current text-orange-500 w-4" viewBox="0 0 24 24"><g data-name="Layer 2"><path d="M17.56 21a1 1 0 01-.46-.11L12 18.22l-5.1 2.67a1 1 0 01-1.45-1.06l1-5.63-4.12-4a1 1 0 01-.25-1 1 1 0 01.81-.68l5.7-.83 2.51-5.13a1 1 0 011.8 0l2.54 5.12 5.7.83a1 1 0 01.81.68 1 1 0 01-.25 1l-4.12 4 1 5.63a1 1 0 01-.4 1 1 1 0 01-.62.18z" data-name="star"/></g></svg>
-                    <span class="ml-1">{{ $tvshow['vote_average'] }}</span>
-                    <span class="mx-2">|</span>
-                    <span>{{ $tvshow['first_air_date'] }}</span>
-                    <span class="mx-2">|</span>
-                    <span>{{ $tvshow['genres'] }}</span>
-                </div>
 
-                <p class="text-gray-300 mt-8">
-                    {{ $tvshow['overview'] }}
-                </p>
+<div class="hero mv-single-hero" style="background: url({{ $tvshow['backdrop_path'] }}) no-repeat center">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<!-- <h1> Filme </h1>
+				<ul class="breadcumb">
+					<li class="active"><a href="#">Inicio</a></li>
+					<li> <span class="ion-ios-arrow-right"></span> Filme X</li>
+				</ul> -->
+			</div>
+		</div>
+	</div>
+</div>
 
-                <div class="mt-12">
-                    <div class="flex mt-4">
-                        @foreach ($tvshow['created_by'] as $crew)
-                            <div class="mr-8">
-                                <div>{{ $crew['name'] }}</div>
-                                <div class="text-sm text-gray-400">Diretor</div>
-                            </div>
-
-                        @endforeach
-                    </div>
-                </div>
-
-                <div x-data="{ isOpen: false }">
-                    @if (count($tvshow['videos']['results']) > 0)
-                        <div class="mt-12">
-                            <button
-                                @click="isOpen = true"
-                                class="flex inline-flex items-center bg-orange-500 text-gray-900 rounded font-semibold px-5 py-4 hover:bg-orange-600 transition ease-in-out duration-150"
-                            >
-                                <svg class="w-6 fill-current" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
-                                <span class="ml-2">Ver Trailer</span>
-                            </button>
-                        </div>
-
-                        <template x-if="isOpen">
-                            <div
-                                style="background-color: rgba(0, 0, 0, .5);"
-                                class="fixed top-0 left-0 w-full h-full flex items-center shadow-lg overflow-y-auto"
-                            >
-                                <div class="container mx-auto lg:px-32 rounded-lg overflow-y-auto">
-                                    <div class="bg-gray-900 rounded">
-                                        <div class="flex justify-end pr-4 pt-2">
-                                            <button
-                                                @click="isOpen = false"
-                                                @keydown.escape.window="isOpen = false"
-                                                class="text-3xl leading-none hover:text-gray-300">&times;
-                                            </button>
-                                        </div>
-                                        <div class="modal-body px-8 py-8">
-                                            <div class="responsive-container overflow-hidden relative" style="padding-top: 56.25%">
-                                                <iframe class="responsive-iframe absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/{{ $tvshow['videos']['results'][0]['key'] }}" style="border:0;" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<div class="page-single movie-single movie_single">
+	<div class="container">
+		<div class="row ipad-width2">
+			<div class="col-md-4 col-sm-12 col-xs-12">
+				<div class="movie-img sticky-sb">
+					<img src="{{ $tvshow['poster_path'] }}" alt="{{ $tvshow['name'] }}">
+					<div class="movie-btn">	
+						<div class="btn-transform transform-vertical red">
+							<div><a href="https://www.youtube.com/embed/{{ $trailer['video'] }}" class="item item-1 redbtn"> <i class="ion-play"></i> Assistir Trailer</a></div>
+							<div><a href="https://www.youtube.com/embed/{{ $trailer['video'] }}" class="item item-2 redbtn fancybox-media hvr-grow"><i class="ion-play"></i></a></div>
+						</div>
+						<div class="btn-transform transform-vertical">
+							<div><a href="{{ $tvshow['homepage'] }}" class="item item-1 yellowbtn" target="_blank"> <i class="ion-card"></i> Link Oficial</a></div>
+							<div><a href="{{ $tvshow['homepage'] }}" class="item item-2 yellowbtn" target="_blank"><i class="ion-card"></i></a></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-8 col-sm-12 col-xs-12">
+				<div class="movie-single-ct main-content">
+					<h1 class="bd-hd">{{ $tvshow['name'] }} <span>{{ $tvshow['first_air_date'] }}</span></h1>
+					<div class="social-btn">
+						<a href="#" class="parent-btn add-favorite"><i class="ion-heart"></i> Adicionar aos Favoritos</a>
+						<div class="hover-bnt">
+							<a href="#" class="parent-btn"><i class="ion-android-share-alt"></i> Compartilhar</a>
+							<div class="hvr-item social-share">
+								<a href="#" class="hvr-grow facebook"><i class="ion-social-facebook"></i></a>
+								<a href="#" class="hvr-grow twitter"><i class="ion-social-twitter"></i></a>
+								<a href="#" class="hvr-grow whatsapp"><i class="ion-social-whatsapp"></i></a>
+							</div>
+						</div>		
+					</div>
+					<div class="movie-rate">
+						<div class="rate">
+							<i class="ion-android-star"></i>
+							<p><span>{{ $tvshow['vote_average'] }}</span> /10<br>
+								<span class="rv">56 Avaliações</span>
+							</p>
+						</div>
+						<div class="rate-star">
+							<p>Avalie esta Série:  </p>
+							<i class="ion-ios-star"></i>
+							<i class="ion-ios-star"></i>
+							<i class="ion-ios-star"></i>
+							<i class="ion-ios-star"></i>
+							<i class="ion-ios-star"></i>
+							<i class="ion-ios-star"></i>
+							<i class="ion-ios-star"></i>
+							<i class="ion-ios-star"></i>
+							<i class="ion-ios-star-outline"></i>
+						</div>
+					</div>
+					<div class="movie-tabs">
+						<div class="tabs">
+							<ul class="tab-links tabs-mv">
+								<li class="active"><a href="#overview">Sinopse</a></li>
+								<li><a href="#reviews">Avaliações</a></li>
+								<li><a href="#cast">Equipe</a></li>
+                                <li><a href="#media">Mídia</a></li> 
+                                <li><a href="#season">Temporadas</a></li> 
+								<li><a href="#moviesrelated">Séries Relacionadas</a></li>                        
+							</ul>
+						    <div class="tab-content">
+						        <div id="overview" class="tab active">
+						            <div class="row">
+						            	<div class="col-md-8 col-sm-12 col-xs-12">
+                                            <p>{{ $tvshow['overview'] }}</p>
+                                            <div class="title-hd-sm tab-links-2">
+												<h4>Temporada Atual</h4>
+												<a href="#season" class="time">Veja todas as Temporadas <i class="ion-ios-arrow-right"></i></a>
+											</div>
+                                            <div class="mvcast-item">											
+												<div class="cast-it">
+													<div class="cast-left series-it">
+                                                        <img src="{{ $tvshow['latestSeason']['poster_path'] }}" alt="{{ $tvshow['latestSeason']['name'] }}">
+														<div>
+															<a href="#season">{{ $tvshow['latestSeason']['name'] }}</a>
+															<p>{{ $tvshow['latestSeason']['episode_count'] }} Episódios</p>
+															<p>Temporada {{ $tvshow['latestSeason']['season_number'] }} de {{ $tvshow['name'] }} lançada em 
+                                                            {{ $tvshow['latestSeason']['air_date'] }}.</p>
+                                                        </div>
+													</div>											
+												</div>	
+											</div>
+                                            <div class="title-hd-sm tab-links-2">
+												<h4>Imagens & Vídeos</h4>
+												<a href="#media" class="time">Veja todas as imagens e vídeos <i class="ion-ios-arrow-right"></i></a>
+											</div>
+											<div class="mvsingle-item ov-item">
+                                                @foreach ($tvshow['images']->take(3) as $image)
+                                                    <a class="img-lightbox"  data-fancybox-group="gallery" href="{{ 'https://image.tmdb.org/t/p/original/'.$image['file_path'] }}" ><img src="{{ 'https://image.tmdb.org/t/p/w500/'.$image['file_path'] }}"></a>
+                                                @endforeach
+												
+												<div class="vd-it">
+													<img class="vd-img" src="https://img.youtube.com/vi/{{ $trailer['video'] }}/default.jpg" alt="">
+													<a class="fancybox-media hvr-grow" href="https://www.youtube.com/embed/{{ $trailer['video'] }}"><img src="{{ asset('img/front/play-vd.png') }}" alt=""></a>
+												</div>
                                             </div>
-                                        </div>
-                                    </div>
+											<div class="title-hd-sm tab-links-2">
+												<h4>Elenco</h4>
+												<a href="#cast" class="time">Veja todo o elenco  <i class="ion-ios-arrow-right"></i></a>
+											</div>
+                                            <!-- movie cast -->
+											<div class="mvcast-item">
+                                                @foreach ($tvshow['cast']->take(6) as $cast)											
+												    <div class="cast-it">
+												    	<div class="cast-left">
+												    		<img src="{{ $cast['profile_path'] }}" alt="">
+												    		<a href="{{ route('atores.show', $cast['id']) }}">{{ $cast['name'] }}</a>
+												    	</div>
+												    	<p>...  {{ $cast['character'] }}</p>
+                                                    </div>
+                                                @endforeach
+											</div>
+											<div class="title-hd-sm tab-links-2">
+												<h4>Avaliações</h4>
+												<a href="#reviews" class="time">Veja todas as avaliações <i class="ion-ios-arrow-right"></i></a>
+											</div>
+											<!-- movie user review -->
+											<div class="mv-user-review-item">
+												<h3>Melhor filme na minha opinião</h3>
+												<div class="no-star">
+													<i class="ion-android-star"></i>
+													<i class="ion-android-star"></i>
+													<i class="ion-android-star"></i>
+													<i class="ion-android-star"></i>
+													<i class="ion-android-star"></i>
+													<i class="ion-android-star"></i>
+													<i class="ion-android-star"></i>
+													<i class="ion-android-star"></i>
+													<i class="ion-android-star"></i>
+													<i class="ion-android-star last"></i>
+												</div>
+												<p class="time">
+													17/12/2018 por <a href="#reviews"> João Paulo</a>
+                                                </p>
+                                                <p>Este é de longe um dos meus filmes favoritos do MCU. A introdução de novos personagens, bons e ruins, também torna o filme mais emocionante. dar aos personagens mais uma história de fundo também pode ajudar o público a se relacionar melhor com diferentes personagens e conectar um vínculo entre o público e os atores ou personagens. Ver o filme três vezes não me incomoda aqui, pois é tão emocionante e emocionante toda vez que o assisto. Em outras palavras, o filme é muito melhor do que os filmes anteriores (e eu amo tudo da Marvel), a trama é esplêndida (eles realmente se saem em cada filme, não há problemas em assistir mais de uma vez.</p>
+                                            </div>
+						            	</div>
+						            	<div class="col-md-4 col-xs-12 col-sm-12">
+						            		<div class="sb-it">
+                                                <h6>Criado por: </h6>
+                                                <p>
+                                                    @foreach ($tvshow['created_by'] as $created_by)											
+                                                        <a href="{{ route('atores.show', $created_by['id']) }}">{{ $created_by['name'] }} </a>
+                                                    @endforeach
+                                                </p>
+						            		</div>
+						            		<div class="sb-it">
+                                                <h6>Estrelas: </h6>
+                                                <p>
+                                                    @foreach ($tvshow['cast']->take(4) as $cast)											
+                                                        <a href="{{ route('atores.show', $cast['id']) }}">{{ $cast['name'] }}</a>, 
+                                                    @endforeach
+                                                </p>
+						            		</div>
+						            		<div class="sb-it">
+						            			<h6>Gêneros:</h6>
+						            			<p>{{ $tvshow['genres'] }}</p>
+                                            </div>
+                                            <div class="sb-it">
+						            			<h6>Número de Temporadas:</h6>
+						            			<p>{{ $tvshow['number_of_seasons'] }}</p>
+                                            </div>
+                                            <div class="sb-it">
+						            			<h6>Número de Episódios:</h6>
+						            			<p>{{ $tvshow['number_of_episodes'] }}</p>
+						            		</div>
+						            		<div class="sb-it">
+						            			<h6>Primeira Temporada:</h6>
+						            			<p>{{ $tvshow['first_air_date'] }}</p>
+                                            </div>
+                                            <div class="sb-it">
+						            			<h6>Última Temporada:</h6>
+						            			<p>{{ $tvshow['last_air_date'] }}</p>
+						            		</div>
+						            		<div class="sb-it">
+						            			<h6>Duração / Episódio:</h6>
+						            			<p>{{ $tvshow['episode_run_time'] }} min</p>
+                                            </div>
+						            		<div class="sb-it">
+						            			<h6>Status:</h6>
+						            			<p>{{ $tvshow['status'] }}</p>
+						            		</div>
+						            		<div class="sb-it">
+						            			<h6>Palavras-Chave:</h6>
+						            			<p class="tags">
+                                                    @foreach ($keywords as $keyword)
+                                                        <span class="time"><a href="#">{{ $keyword['name'] }}</a></span>
+													@endforeach
+						            			</p>
+						            		</div>
+						            		<div class="ads">
+												<img src="{{ asset('img/front/ads1.png') }}" alt="ANÚNCIO">
+											</div>
+						            	</div>
+						            </div>
                                 </div>
-                            </div>
-                        </template>
-                    @endif
+						        <div id="reviews" class="tab review">
+						           <div class="row">
+						            	<div class="rv-hd">
+						            		<div class="div">
+							            		<h3>Reviews relacionados à</h3>
+						       	 				<h2>{{ $tvshow['name'] }}</h2>
+							            	</div>
+							            	<a href="#" class="redbtn add-review">Avaliar</a>
+						            	</div>
+						            	<div class="topbar-filter">
+											<p>Reviews encontrados: <span>2 reviews</span> no total</p>
+										</div>
+										<div class="mv-user-review-item">
+											<div class="user-infor">
+												<img src="{{ asset('img/front/user-profile.jpg') }}" alt="">
+												<div>
+													<h3>Me diverti bastante com esse filme</h3>
+													<div class="no-star">
+														<i class="ion-android-star"></i>
+														<i class="ion-android-star"></i>
+														<i class="ion-android-star"></i>
+														<i class="ion-android-star"></i>
+														<i class="ion-android-star"></i>
+														<i class="ion-android-star"></i>
+														<i class="ion-android-star last"></i>
+														<i class="ion-android-star last"></i>
+														<i class="ion-android-star last"></i>
+														<i class="ion-android-star last"></i>
+													</div>
+													<p class="time">
+														04/04/2020 por <a href="#reviews"> Júlia Oliveira</a>
+													</p>
+												</div>
+                                            </div>
+                                            <p>Se não houvesse uma audiência para os heróis cômicos da Marvel, claramente esses filmes não seriam feitos, para responder a outro crítico, embora eu simpatize com ele. O mundo é realmente um lugar infinitamente mais complexo que o mundo dos quadrinhos da Marvel, com heróis e vilões claramente identificáveis. Mas tenho a sensação de que, de Robert Downey Jr. até o organizador e ator principal como Homem de Ferro por trás dos Vingadores, esses jogadores adoram fazer esses papéis porque é muito divertido. Se eles não mostrassem esse espírito de diversão para o público, esses filmes nunca seriam feitos.</p>
+                                        </div>
+                                        <div class="mv-user-review-item last">
+											<div class="user-infor">
+												<img src="{{ asset('img/front/user-profile.jpg') }}" alt="">
+												<div>
+													<h3>Melhor filme na minha opinião</h3>
+													<div class="no-star">
+														<i class="ion-android-star"></i>
+														<i class="ion-android-star"></i>
+														<i class="ion-android-star"></i>
+														<i class="ion-android-star"></i>
+														<i class="ion-android-star"></i>
+														<i class="ion-android-star"></i>
+														<i class="ion-android-star"></i>
+														<i class="ion-android-star"></i>
+														<i class="ion-android-star"></i>
+														<i class="ion-android-star last"></i>
+													</div>
+													<p class="time">
+														17/12/2018 por <a href="#review"> João Paulo</a>
+													</p>
+												</div>
+                                            </div>
+                                            <p>Este é de longe um dos meus filmes favoritos do MCU. A introdução de novos personagens, bons e ruins, também torna o filme mais emocionante. dar aos personagens mais uma história de fundo também pode ajudar o público a se relacionar melhor com diferentes personagens e conectar um vínculo entre o público e os atores ou personagens. Ver o filme três vezes não me incomoda aqui, pois é tão emocionante e emocionante toda vez que o assisto. Em outras palavras, o filme é muito melhor do que os filmes anteriores (e eu amo tudo da Marvel), a trama é esplêndida (eles realmente se saem em cada filme, não há problemas em assistir mais de uma vez.</p>
+                                        </div>
+										<div class="topbar-filter">
+											<div class="pagination2">
+												<span>Página 1 de 1:</span>
+												<a class="active" href="#">1</a>
+												<a href="#"><i class="ion-arrow-right-b"></i></a>
+											</div>
+										</div>
+						            </div>
+						        </div>
+						        <div id="cast" class="tab">
+						        	<div class="row">
+						            	<h3>Elenco e equipe de</h3>
+					       	 			<h2>{{ $tvshow['name'] }}</h2>
+										<!-- //== -->
+					       	 			<div class="title-hd-sm">
+											<h4>Criadores</h4>
+										</div>
+										<div class="mvcast-item">
+                                            @foreach ($tvshow['created_by'] as $created_by)											
+												<div class="cast-it">
+													<div class="cast-left">
+														<img src="{{ $created_by['profile_path'] }}" alt="{{ $created_by['name'] }}">
+														<a href="{{ route('atores.show', $created_by['id']) }}">{{ $created_by['name'] }}</a>
+													</div>
+													<p>...  </p>
+                                                </div>
+                                            @endforeach	
+										</div>
+										<!-- //== -->
+										<div class="title-hd-sm">
+											<h4>Elenco</h4>
+										</div>
+										<div class="mvcast-item">
+                                            @foreach ($tvshow['cast'] as $cast)											
+												<div class="cast-it">
+													<div class="cast-left">
+														<img src="{{ $cast['profile_path'] }}" alt="{{ $cast['name'] }}">
+														<a href="{{ route('atores.show', $cast['id']) }}">{{ $cast['name'] }}</a>
+													</div>
+													<p>...  {{ $cast['character'] }}</p>
+                                                </div>
+                                            @endforeach	
+										</div>
+										<!-- //== -->
+						            </div>
+					       	 	</div>
+					       	 	<div id="media" class="tab">
+						        	<div class="row">
+						        		<div class="rv-hd">
+						            		<div>
+						            			<h3>Vídeos & Imagens de</h3>
+					       	 					<h2>{{ $tvshow['name'] }}</h2>
+						            		</div>
+						            	</div>
+						            	<div class="title-hd-sm">
+											<h4>Videos <span>(Oficiais)</span></h4>
+										</div>
+										<div class="mvsingle-item media-item">
+                                            @foreach (collect($tvshow['videos']['results'])->take(4) as $video)
+                                                <div class="vd-item">
+											    	<div class="vd-it">
+											    		<img class="vd-img" src="https://img.youtube.com/vi/{{ $video['key'] }}/default.jpg" alt="">
+                                                    <a class="fancybox-media hvr-grow"  href="https://www.youtube.com/embed/{{ $video['key'] }}"><img src="{{ asset('img/front/play-vd.png') }}" alt="{{ $video['name'] }}"></a>
+											    	</div>
+											    	<div class="vd-infor">
+											    		<h6> <a href="#">{{ $video['name'] }}</a></h6>
+											    		<p class="time"> {{ $video['site'] }}</p>
+											    	</div>
+                                                </div>
+                                            @endforeach
+										</div>
+										<div class="title-hd-sm">
+											<h4>Imagens <span> (Oficiais)</span></h4>
+										</div>
+										<div class="mvsingle-item">
+                                            @foreach ($tvshow['images'] as $image)
+                                                <a class="img-lightbox"  data-fancybox-group="gallery" href="{{ 'https://image.tmdb.org/t/p/original/'.$image['file_path'] }}" ><img src="{{ 'https://image.tmdb.org/t/p/w500/'.$image['file_path'] }}" alt=""></a>
+                                            @endforeach 
+										</div>
+						        	</div>
+					       	 	</div>
+                                <div id="season" class="tab">
+					       	 		<div class="row">
+					       	 			<h3>Temporadas da Série</h3>
+                                        <h2>{{ $tvshow['name'] }}</h2>
+                                        
+                                        @foreach ($tvshow['seasons'] as $season)
+										<div class="mvcast-item">											
+                                            <div class="cast-it">
+                                                <div class="cast-left series-it">
+                                                    <img src="{{ $season['poster_path'] }}" alt="{{ $season['name'] }}">
+                                                    <div>
+                                                        <a href="#season">{{ $season['name'] }}</a>
+                                                        <p>{{ $season['episode_count'] }} Episódios</p>
+                                                        <p>Temporada {{ $season['season_number'] }} de {{ $tvshow['name'] }} lançada em 
+                                                        {{ $season['air_date'] }}.</p>
+                                                    </div>
+                                                </div>											
+                                            </div>	
+                                        </div>
+                                        @endforeach
+                                        
+					       	 		</div>
+					       	 	</div>
+                                <div id="moviesrelated" class="tab">
+					       	 		<div class="row">
+					       	 			<h3>Séries Relacionadas à</h3>
+                                        <h2>{{ $tvshow['name'] }}</h2>
+                                        
+                                        @foreach ($similars as $similar)
+										<div class="movie-item-style-2" onclick="window.open('{{ route('tv.show', $similar['id']) }}','_self')">
+                                        <img src="{{ $similar['poster_path'] }}" alt="{{ $similar['name'] }}">
+											<div class="mv-item-infor">
+												<h6><a href="{{ route('tv.show', $similar['id']) }}">{{ $similar['name'] }} <span>({{ $similar['first_air_date'] }})</span></a></h6>
+												<p class="rate"><i class="ion-android-star"></i><span>{{ $similar['vote_average'] }}</span> /10</p>
+												<p class="describe">{{ $similar['overview'] }}</p>
+												<p class="run-time">Popularidade: {{ $similar['popularity'] }}</p>
+											</div>
+                                        </div>
+                                        @endforeach
+                                        
+					       	 		</div>
+					       	 	</div>
+						    </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
-
-                </div>
-
-            </div>
-        </div>
-    </div> <!-- end tv-info -->
-
-    <div class="tv-cast border-b border-gray-800">
-        <div class="container mx-auto px-4 py-16">
-            <h2 class="text-4xl font-semibold">Cast</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
-                @foreach ($tvshow['cast'] as $cast)
-                    <div class="mt-8">
-                        <a href="{{ route('atores.show', $cast['id']) }}">
-                            <img src="{{ $cast['profile_path'] }}" alt="actor1" class="hover:opacity-75 transition ease-in-out duration-150">
-                        </a>
-                        <div class="mt-2">
-                            <a href="{{ route('atores.show', $cast['id']) }}" class="text-lg mt-2 hover:text-gray:300">{{ $cast['name'] }}</a>
-                            <div class="text-sm text-gray-400">
-                                {{ $cast['character'] }}
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </div> <!-- end tv-cast -->
-
-    <div class="tv-images" x-data="{ isOpen: false, image: ''}">
-        <div class="container mx-auto px-4 py-16">
-            <h2 class="text-4xl font-semibold">Imagens</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-                @foreach ($tvshow['images'] as $image)
-                    <div class="mt-8">
-                        <a
-                            @click.prevent="
-                                isOpen = true
-                                image='{{ 'https://image.tmdb.org/t/p/original/'.$image['file_path'] }}'
-                            "
-                            href="#"
-                        >
-                            <img src="{{ 'https://image.tmdb.org/t/p/w500/'.$image['file_path'] }}" alt="image1" class="hover:opacity-75 transition ease-in-out duration-150">
-                        </a>
-                    </div>
-                @endforeach
-            </div>
-
-            <div
-                style="background-color: rgba(0, 0, 0, .5);"
-                class="fixed top-0 left-0 w-full h-full flex items-center shadow-lg overflow-y-auto"
-                x-show="isOpen"
-            >
-                <div class="container mx-auto lg:px-32 rounded-lg overflow-y-auto">
-                    <div class="bg-gray-900 rounded">
-                        <div class="flex justify-end pr-4 pt-2">
-                            <button
-                                @click="isOpen = false"
-                                @keydown.escape.window="isOpen = false"
-                                class="text-3xl leading-none hover:text-gray-300">&times;
-                            </button>
-                        </div>
-                        <div class="modal-body px-8 py-8">
-                            <img :src="image" alt="poster">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> <!-- end tv-images -->
 @endsection

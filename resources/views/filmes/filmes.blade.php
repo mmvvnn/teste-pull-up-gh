@@ -1,5 +1,9 @@
 @extends('layouts.main')
 
+@section('meta-description', 'Filmes dos mais diversos generos')
+@section('meta-keywords', 'filme, filmes, hollywood, imdb, nome do filme, sinopse, ver filme, online, genero, filmes online, baixar filme')
+@section('title', 'Filmes')
+
 @section('content')
 
     <div class="hero common-hero">

@@ -70,12 +70,14 @@ class IndexViewModel extends ViewModel
             })->implode(', ');
 
             return collect($movie)->merge([
-                'poster_path' => 'https://image.tmdb.org/t/p/w500/'.$movie['poster_path'],
+                'poster_path' => 'https://image.tmdb.org/t/p/w185/'.$movie['poster_path'],
+                'poster_path_slider' => 'https://image.tmdb.org/t/p/w342/'.$movie['poster_path'],
                 /*'vote_average' => $movie['vote_average'] * 10 .'%',*/
-                'release_date' => Carbon::parse($movie['release_date'])->format('d F Y'),
+                'release_date' => Carbon::parse($movie['release_date'])->format('d/m/Y'),
                 'genres' => $genresFormatted,
             ])->only([
-                'poster_path', 'id', 'genre_ids', 'title', 'vote_average', 'overview', 'release_date', 'genres', 'original_language', 
+                'poster_path', 'poster_path_slider', 'id', 'genre_ids', 'title', 'vote_average', 'overview', 'release_date', 
+                'genres', 'original_language'
             ]);
         });
     }
@@ -83,14 +85,11 @@ class IndexViewModel extends ViewModel
     private function formatTrailer($movie)
     {
         return collect($movie)->merge([
-            'poster_path' => $movie['poster_path']
-                ? 'https://image.tmdb.org/t/p/w500/'.$movie['poster_path']
-                : 'https://via.placeholder.com/500x750',
             'image' => $movie['images']['backdrops'][0]['file_path'],
             'video' => $movie['videos']['results'][0]['key'],
             'genres' => collect($movie['genres'])->pluck('name')->flatten()->implode(', '),
         ])->only([
-            'poster_path', 'id', 'title', 'video', 'image', 'genres', 
+            'id', 'title', 'video', 'image', 'genres'
         ]);
     }
 }

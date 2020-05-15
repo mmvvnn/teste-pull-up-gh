@@ -7,12 +7,13 @@ use Spatie\ViewModels\ViewModel;
 
 class FilmeViewModel extends ViewModel
 {
-    public $movie, $similars;
+    public $movie, $similars, $keywords;
 
-    public function __construct($movie, $similars)
+    public function __construct($movie, $similars, $keywords)
     {
         $this->movie = $movie;
         $this->similars = $similars;
+        $this->keywords = $keywords;
     }
 
     public function movie()
@@ -82,8 +83,8 @@ class FilmeViewModel extends ViewModel
         $similars = collect($this->similars)->map(function($similar) {
             return collect($similar)->merge([
                 'poster_path' => collect($similar['poster_path'])
-                    ? 'https://image.tmdb.org/t/p/w500/'.$similar['poster_path']
-                    : 'https://via.placeholder.com/500x750',
+                    ? 'https://image.tmdb.org/t/p/w342/'.$similar['poster_path']
+                    : 'https://via.placeholder.com/342x513',
                 'release_date' => Carbon::parse($similar['release_date'])->format('Y'),
             ])->only([
                 'poster_path', 'id', 'title', 'overview', 'release_date', 'vote_average'

@@ -1,5 +1,9 @@
 @extends('layouts.main')
 
+@section('meta-description', 'Filmes, series, celebridades, avaliação de filmes, notas imdb, trailes, sinopse, fotos, videos e muito mais')
+@section('meta-keywords', 'filme, serie, celebridades, avaliacao, imdb, trailer, video, videos, filmes, series, nota, tudo sobre filmes, tudo sobre series, imdb, sinopse, assistir, genero, online, baixar, download')
+@section('title', 'Movie')
+
 @section('content')
 
     <!-- Home Slider -->
